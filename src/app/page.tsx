@@ -64,12 +64,12 @@ export default function Example() {
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
-          <div className="hidden lg:flex">
+          <div className="hidden lg:flex gap-x-4 mr-4">
             {navigation.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="text-sm font-semibold leading-6 text-gray-900"
+                className="text-sm font-semibold leading-6 text-white"
               >
                 {item.name}
               </a>
@@ -77,10 +77,10 @@ export default function Example() {
           </div>
 
           {
-            playing ? <PauseIcon className='text-white w-8' onClick={onPauseIconClick} /> : <PlayIcon className='text-white w-8' onClick={onPlayIconClick} />
+            playing ? <PauseIcon className='text-white w-5' onClick={onPauseIconClick} /> : <PlayIcon className='text-white w-5' onClick={onPlayIconClick} />
           }
           {
-            mute ? <MuteIcon className='text-white w-8' onClick={onMuteIconClick} /> : <VolumeHighIcon className='text-white w-8' onClick={onVolumeIconClick} />
+            mute ? <MuteIcon className='text-white w-5' onClick={onMuteIconClick} /> : <VolumeHighIcon className='text-white w-5' onClick={onVolumeIconClick} />
           }
           {/* <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
