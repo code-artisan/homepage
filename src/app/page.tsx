@@ -1,22 +1,73 @@
 'use client';
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import dynamic from 'next/dynamic'
 import { Dialog } from '@headlessui/react'
 import { MediaPlayer, MediaPlayerInstance, MediaProvider } from '@vidstack/react'
 import '@vidstack/react/player/styles/base.css'
+import clsx from 'clsx'
 import { PlayIcon, PauseIcon, MuteIcon, VolumeHighIcon } from '@vidstack/react/icons'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
 const navigation = [
-  { name: '软件', href: '#' },
-  { name: '关于', href: '//blog.villager.cafe' },
+  {
+    name: '软件',
+    href: '#',
+    target: '_blank',
+  },
+  {
+    name: '关于',
+    href: '//blog.villager.cafe',
+    target: '_blank',
+  },
 ]
 
-export default function Example() {
+// const getAudioSource = async () => await fetch('/with-an-orchid.m4a');
+
+function Index() {
   const playerRef = useRef<MediaPlayerInstance | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [playing, setPlayingStatus] = useState<boolean>(true);
-  const [mute, setMuteStatus] = useState<boolean>(false);
+  const [playing, setPlayingStatus] = useState<boolean>(false);
+  const [mute, setMuteStatus] = useState<boolean>(true);
+  const [isCanPlay, setCanPlayStatus] = useState(false);
+
+  useEffect(() => {
+    const onDocumentMouseMove = () => setPlayingStatus(false)
+
+    document.addEventListener('mousemove', onDocumentMouseMove, false)
+
+    return () => {
+      document.removeEventListener('mousemove', onDocumentMouseMove, false)
+    }
+  }, [])
+
+  // const readyStatusRef = useRef<boolean>(false);
+
+  // const audioContextRef = useRef<AudioContext>(new AudioContext());
+  // const gainNodeRef = useRef(new GainNode(audioContextRef.current));
+  // const sourceBufferRef = useRef<AudioBufferSourceNode | null>(null);
+
+  // useEffect(() => {
+  //   if (readyStatusRef.current !== true) {
+  //     readyStatusRef.current = true;
+
+  //     getAudioSource()
+  //       .then(response => response.arrayBuffer())
+  //       .then(buffer => audioContextRef.current.decodeAudioData(buffer))
+  //       .then(audio => {
+  //         sourceBufferRef.current = audioContextRef.current.createBufferSource();
+  //         sourceBufferRef.current.buffer = audio;
+  //         sourceBufferRef.current.connect(gainNodeRef.current);
+
+  //         gainNodeRef.current.connect(audioContextRef.current.destination);
+  //       });
+  //   }
+
+  //   return () => {
+  //     gainNodeRef.current?.disconnect();
+  //     sourceBufferRef.current?.disconnect();
+  //   }
+  // }, []);
 
   const onPlayIconClick = () => {
     playerRef.current?.play();
@@ -36,12 +87,10 @@ export default function Example() {
 
   const onMuteIconClick = () => setMuteStatus(false);
 
-  const onCanPlay = () => {
-
-  };
+  const onCanPlay = () => setCanPlayStatus(true);
 
   return (
-    <div className="h-full flex flex-1 select-none">
+    <div className="h-full flex flex-1 select-none bg-white">
       <header className="absolute inset-x-0 top-0 z-50">
         <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
           <div className="flex lg:flex-1">
@@ -64,12 +113,14 @@ export default function Example() {
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
+
           <div className="hidden lg:flex gap-x-4 mr-4">
             {navigation.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="text-sm font-semibold leading-6 text-white"
+                target={item.target}
+                className="text-sm font-semibold leading-6 text-indigo-600"
               >
                 {item.name}
               </a>
@@ -77,10 +128,10 @@ export default function Example() {
           </div>
 
           {
-            playing ? <PauseIcon className='text-white w-5' onClick={onPauseIconClick} /> : <PlayIcon className='text-white w-5' onClick={onPlayIconClick} />
+            playing ? <PauseIcon className={clsx('w-5', isCanPlay ? 'text-white' : 'text-indigo-600')} onClick={onPauseIconClick} /> : <PlayIcon className={clsx('w-5', isCanPlay ? 'text-white' : 'text-indigo-600')} onClick={onPlayIconClick} />
           }
           {
-            mute ? <MuteIcon className='text-white w-5' onClick={onMuteIconClick} /> : <VolumeHighIcon className='text-white w-5' onClick={onVolumeIconClick} />
+            mute ? <MuteIcon className={clsx('w-5', isCanPlay ? 'text-white' : 'text-indigo-600')} onClick={onMuteIconClick} /> : <VolumeHighIcon className={clsx('w-5', isCanPlay ? 'text-white' : 'text-indigo-600')} onClick={onVolumeIconClick} />
           }
           {/* <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
@@ -128,22 +179,13 @@ export default function Example() {
         </Dialog>
       </header>
 
-      <div className="relative isolate px-6 pt-14 lg:px-8 flex flex-1">
+      <div className="relative isolate px-6 items-center lg:px-8 flex flex-1">
         {/* <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-          <div className="hidden sm:mb-8 sm:flex sm:justify-center">
-            <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-              Announcing our next round of funding.{' '}
-              <a href="#" className="font-semibold text-indigo-600">
-                <span className="absolute inset-0" aria-hidden="true" />
-                Read more <span aria-hidden="true">&rarr;</span>
-              </a>
-            </div>
-          </div>
           <div className="text-center">
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <a
                 href="#"
-                className="rounded-md bg-white-100 border-2 border-white-100 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:text-indigo-500 hover:border-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="rounded-md bg-indigo-600 border-2 border-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:text-indigo-500 hover:border-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Get started
               </a>
@@ -151,15 +193,14 @@ export default function Example() {
           </div>
         </div> */}
 
-        <div className="absolute inset-x-0 -z-10 transform-gpu top-0 left-0 bottom-0 right-0">
+        <div className="absolute inset-x-0 -z-10 top-0 left-0 bottom-0 right-0 overflow-hidden">
           <MediaPlayer
-            loop
             autoplay
             muted={mute}
             crossorigin
             title="With an orchid"
             controls={false}
-            src="//www.youtube.com/embed/rsNrpw2vPrA"
+            src="/with-an-orchid.mp4"
             ref={playerRef}
             onCanPlay={onCanPlay}
             className='w-full h-full'
@@ -174,3 +215,5 @@ export default function Example() {
     </div>
   )
 }
+
+export default dynamic(() => Promise.resolve(Index), { ssr: false });
