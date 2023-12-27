@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { Dialog } from '@headlessui/react'
 import { MediaPlayer, MediaPlayerInstance, MediaProvider } from '@vidstack/react'
@@ -30,16 +30,6 @@ function Index() {
   const [playing, setPlayingStatus] = useState<boolean>(true);
   const [mute, setMuteStatus] = useState<boolean>(true);
   const [isCanPlay, setCanPlayStatus] = useState(false);
-
-  useEffect(() => {
-    const onDocumentMouseMove = () => setPlayingStatus(false)
-
-    document.addEventListener('mousemove', onDocumentMouseMove, false)
-
-    return () => {
-      document.removeEventListener('mousemove', onDocumentMouseMove, false)
-    }
-  }, [])
 
   // const readyStatusRef = useRef<boolean>(false);
 
