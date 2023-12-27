@@ -27,7 +27,7 @@ const navigation = [
 function Index() {
   const playerRef = useRef<MediaPlayerInstance | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [playing, setPlayingStatus] = useState<boolean>(false);
+  const [playing, setPlayingStatus] = useState<boolean>(true);
   const [mute, setMuteStatus] = useState<boolean>(true);
   const [isCanPlay, setCanPlayStatus] = useState(false);
 
@@ -120,7 +120,7 @@ function Index() {
                 key={item.name}
                 href={item.href}
                 target={item.target}
-                className="text-sm font-semibold leading-6 text-indigo-600"
+                className={clsx('text-sm font-semibold leading-6', isCanPlay ? 'text-white' : 'text-indigo-600')}
               >
                 {item.name}
               </a>
